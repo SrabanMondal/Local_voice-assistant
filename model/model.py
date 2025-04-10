@@ -4,10 +4,8 @@ genai.configure(api_key="AIzaSyB2TvHIt8HsoiKuURmb7jme5IvF1JbBXF8")
 
 def generate_text(text, target_lang="Hindi"):
     model = genai.GenerativeModel("gemini-2.0-flash")
-    if target_lang:
-        prompt = f"Respond to the following query in {target_lang}: {text}"
-    else:
-        prompt = f"Answer the following query concisely: {text}"
+    
+    prompt = f"Answer the following query concisely in 20 words in clean text: {text}"
 
     try:
         # Generate response

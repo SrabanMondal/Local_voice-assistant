@@ -1,27 +1,24 @@
 import pyaudio
 import wave
+import os
 from TTS.api import TTS
 
-# Initialize Coqui TTS model (loaded once for efficiency)
+# Initialize Coqui TTS model
 tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False, gpu=False)
 
-def speak_text(text):
+def speak_text(text, stop_event=None):
     """
     Convert text to speech using Coqui TTS and play the audio.
     
     Args:
         text (str): Text to synthesize and speak.
+        stop_event (threading.Event, optional): If set, stops playback early.
     """
-    # Generate WAV file
     output_file = "assets/output.wav"
     tts.tts_to_file(text=text, file_path=output_file)
-    print('Voice generated')
-    # Play the WAV file using pyaudio
+
     with wave.open(output_file, 'rb') as wf:
-        # Initialize PyAudio
         p = pyaudio.PyAudio()
-        
-        # Open stream
         stream = p.open(
             format=p.get_format_from_width(wf.getsampwidth()),
             channels=wf.getnchannels(),
@@ -29,15 +26,16 @@ def speak_text(text):
             output=True
         )
 
-        # Read and play audio data
         chunk = 1024
         data = wf.readframes(chunk)
-        while data:
+        while data and (stop_event is None or not stop_event.is_set()):
             stream.write(data)
             data = wf.readframes(chunk)
 
-        # Cleanup
-        print("Speak done")
         stream.stop_stream()
         stream.close()
         p.terminate()
+
+    if os.path.exists(output_file):
+        os.remove(output_file)
+        print(f"Cleaned up {output_file}")
