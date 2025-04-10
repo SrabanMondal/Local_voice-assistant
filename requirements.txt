@@ -1,0 +1,6 @@
+coqui-tts
+faster-whisper
+pyaudio
+numpy
+google-generativeai
+wave

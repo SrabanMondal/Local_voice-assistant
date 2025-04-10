@@ -1,0 +1,1 @@
+from .coqui_tts import speak_text
