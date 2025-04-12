@@ -4,3 +4,7 @@ pyaudio
 numpy
 google-generativeai
 wave
+spacy
+python-dotenv
+
+#python -m spacy download en_core_web_sm

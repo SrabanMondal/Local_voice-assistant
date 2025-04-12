@@ -1,1 +1,1 @@
-from .coqui_tts import speak_text
+from .coqui_tts import speak_text_stream
